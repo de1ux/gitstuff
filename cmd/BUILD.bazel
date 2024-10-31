@@ -1,0 +1,28 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "cmd",
+    srcs = [
+        "back.go",
+        "checkout.go",
+        "commit.go",
+        "forward.go",
+        "init.go",
+        "open.go",
+        "pull.go",
+        "push.go",
+        "root.go",
+        "submit.go",
+    ],
+    importpath = "github.com/de1ux/gitstuff/cmd",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//git",
+        "//shell",
+        "//stack",
+        "@com_github_google_go_github_v50//github",
+        "@com_github_pterm_pterm//:pterm",
+        "@com_github_spf13_cobra//:cobra",
+        "@org_golang_x_oauth2//:oauth2",
+    ],
+)

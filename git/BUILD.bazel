@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "git",
+    srcs = ["git.go"],
+    importpath = "github.com/de1ux/gitstuff/git",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//shell",
+        "//stack",
+    ],
+)
+
+go_test(
+    name = "git_test",
+    srcs = ["git_test.go"],
+    embed = [":git"],
+)

@@ -1,0 +1,22 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+load("@bazel_gazelle//:def.bzl", "gazelle")
+
+# gazelle:prefix github.com/de1ux/gitstuff
+gazelle(name = "gazelle")
+
+go_library(
+    name = "gitstuff_lib",
+    srcs = ["main.go"],
+    importpath = "github.com/de1ux/gitstuff",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//cmd",
+        "@com_github_charmbracelet_bubbletea//:bubbletea",
+    ],
+)
+
+go_binary(
+    name = "gitstuff",
+    embed = [":gitstuff_lib"],
+    visibility = ["//visibility:public"],
+)

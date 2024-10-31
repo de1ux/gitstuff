@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "shell",
+    srcs = [
+        "prompt.go",
+        "shell.go",
+    ],
+    importpath = "github.com/de1ux/gitstuff/shell",
+    visibility = ["//visibility:public"],
+    deps = [
+        "@com_github_erikgeiser_promptkit//confirmation",
+        "@com_github_pterm_pterm//:pterm",
+    ],
+)
