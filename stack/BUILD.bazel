@@ -1,4 +1,4 @@
-load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+load("@rules_go//go:def.bzl", "go_library", "go_test")
 
 go_library(
     name = "stack",
@@ -11,5 +11,5 @@ go_test(
     name = "stack_test",
     srcs = ["stack_test.go"],
     embed = [":stack"],
-    deps = ["@com_github_stretchr_testify//require"],
+    deps = ["@com_github_stretchr_testify//require:go_default_library"],
 )
