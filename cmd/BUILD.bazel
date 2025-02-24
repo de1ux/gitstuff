@@ -17,12 +17,13 @@ go_library(
     importpath = "github.com/de1ux/gitstuff/cmd",
     visibility = ["//visibility:public"],
     deps = [
+        "//audit",
         "//git",
         "//shell",
         "//stack",
-        "@com_github_google_go_github_v50//github:go_default_library",
-        "@com_github_pterm_pterm//:go_default_library",
-        "@com_github_spf13_cobra//:go_default_library",
-        "@org_golang_x_oauth2//:go_default_library",
+        "@com_github_google_go_github_v50//github",
+        "@com_github_pterm_pterm//:pterm",
+        "@com_github_spf13_cobra//:cobra",
+        "@org_golang_x_oauth2//:oauth2",
     ],
 )

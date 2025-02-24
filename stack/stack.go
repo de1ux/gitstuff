@@ -34,7 +34,6 @@ func Load() (*Stack, error) {
 		return nil, fmt.Errorf("failed to open file: %w", err)
 	}
 	return decode(b)
-
 }
 
 func decode(data []byte) (*Stack, error) {

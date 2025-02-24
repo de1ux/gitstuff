@@ -1,6 +1,12 @@
 package cmd
 
-import "github.com/spf13/cobra"
+import (
+	"strings"
+	"time"
+
+	"github.com/de1ux/gitstuff/audit"
+	"github.com/spf13/cobra"
+)
 
 var branchPrefix = ""
 
@@ -16,6 +22,11 @@ func init() {
 	RootCmd.AddCommand(BackCmd)
 	RootCmd.AddCommand(ForwardCmd)
 	RootCmd.AddCommand(OpenCmd)
+
+	RootCmd.PersistentPreRunE = func(cmd *cobra.Command, args []string) error {
+		timestamp := time.Now().Format("2006-01-02 15:04:05")
+		return audit.Write(timestamp + " " + cmd.Name() + " " + strings.Join(args, " "))
+	}
 }
 
 var RootCmd = cobra.Command{

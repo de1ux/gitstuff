@@ -9,7 +9,7 @@ go_library(
     importpath = "github.com/de1ux/gitstuff/shell",
     visibility = ["//visibility:public"],
     deps = [
-        "@com_github_erikgeiser_promptkit//confirmation:go_default_library",
-        "@com_github_pterm_pterm//:go_default_library",
+        "@com_github_erikgeiser_promptkit//confirmation",
+        "@com_github_pterm_pterm//:pterm",
     ],
 )
