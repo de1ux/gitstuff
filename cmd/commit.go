@@ -3,6 +3,7 @@ package cmd
 import (
 	"strings"
 
+	"github.com/de1ux/gitstuff/audit"
 	"github.com/de1ux/gitstuff/git"
 	"github.com/de1ux/gitstuff/shell"
 	_ "github.com/pterm/pterm"
@@ -35,6 +36,10 @@ var CommitCmd = &cobra.Command{
 		}
 
 		if git.InMergeConflict() {
+			err = audit.Write(branch + ": " + "resolving merge conflict automatically")
+			if err != nil {
+				return err
+			}
 			err := git.CommitNoEdit()
 			if err != nil {
 				return err
@@ -60,7 +65,13 @@ var CommitCmd = &cobra.Command{
 			}
 		}
 
-		err = shell.Spinner("> git commit -am '"+commitMsg+"'", func() error {
+		msg = "> git commit -am '" + commitMsg + "'"
+		err = audit.Write(branch + ": " + msg)
+		if err != nil {
+			return err
+		}
+
+		err = shell.Spinner(msg, func() error {
 			return git.Commit(commitMsg)
 		})
 		if err != nil {

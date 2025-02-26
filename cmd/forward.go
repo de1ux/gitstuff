@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/de1ux/gitstuff/audit"
 	"github.com/de1ux/gitstuff/git"
 	"github.com/de1ux/gitstuff/shell"
 	"github.com/de1ux/gitstuff/stack"
@@ -21,6 +22,12 @@ var ForwardCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
+
+		err = audit.Write(branch + ": " + "checking out branch")
+		if err != nil {
+			return err
+		}
+
 		return shell.Spinner("> git checkout "+branch, func() error {
 			return git.Checkout(branch)
 		})

@@ -5,12 +5,23 @@ import (
 	"os"
 	"strings"
 
+	"github.com/de1ux/gitstuff/audit"
 	"github.com/de1ux/gitstuff/git"
 	"github.com/de1ux/gitstuff/shell"
 	"github.com/google/go-github/v50/github"
 	"github.com/spf13/cobra"
 	"golang.org/x/oauth2"
 )
+
+var (
+	repo         string
+	organization string
+)
+
+func init() {
+	SubmitCmd.Flags().StringVar(&repo, "repo", "", "Github repo to submit the PR to")
+	SubmitCmd.Flags().StringVar(&organization, "org", "", "Github organization to submit the PR to")
+}
 
 const NewPrTemplate = `
 ## Motivation
@@ -35,8 +46,7 @@ const NewPrTemplate = `
 `
 
 var SubmitCmd = &cobra.Command{
-	Use:  "submit",
-	Args: cobra.NoArgs,
+	Use: "submit",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		c := github.NewClient(
 			oauth2.NewClient(
@@ -58,7 +68,7 @@ var SubmitCmd = &cobra.Command{
 
 		var pr *github.PullRequest
 		err = shell.Spinner("Creating draft PR on Github", func() error {
-			pr, _, err = c.PullRequests.Create(cmd.Context(), "DataDog", "dd-source", &github.NewPullRequest{
+			pr, _, err = c.PullRequests.Create(cmd.Context(), organization, repo, &github.NewPullRequest{
 				Title: github.String(ticket),
 				Draft: github.Bool(true),
 				Head:  github.String(current),
@@ -80,6 +90,6 @@ var SubmitCmd = &cobra.Command{
 
 		shell.BashStatusCode("open " + pr.GetHTMLURL())
 
-		return nil
+		return audit.Write(current + ": created draft PR " + pr.GetHTMLURL())
 	},
 }

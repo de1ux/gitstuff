@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/de1ux/gitstuff/audit"
 	"github.com/de1ux/gitstuff/git"
 	"github.com/de1ux/gitstuff/shell"
 	"github.com/spf13/cobra"
@@ -83,6 +84,8 @@ var InitCmd = &cobra.Command{
 		}
 
 		log.Println("All set, gl hf")
-		return nil
+
+		return audit.Write("created new branch " + branch)
+
 	},
 }

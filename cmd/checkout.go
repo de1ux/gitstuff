@@ -3,6 +3,7 @@ package cmd
 import (
 	"strings"
 
+	"github.com/de1ux/gitstuff/audit"
 	"github.com/de1ux/gitstuff/git"
 	"github.com/de1ux/gitstuff/shell"
 	"github.com/spf13/cobra"
@@ -21,9 +22,19 @@ var CheckoutCmd = &cobra.Command{
 		branch := args[0]
 
 		if newBranch {
+			err := audit.Write(branch + ": " + "creating new branch and checking out")
+			if err != nil {
+				return err
+			}
+
 			return shell.Spinner("> git checkout -b "+branch, func() error {
 				return git.CheckoutNew(branch)
 			})
+		}
+
+		err := audit.Write(branch + ": " + "checking out branch")
+		if err != nil {
+			return err
 		}
 
 		if len(args) == 1 {

@@ -4,11 +4,14 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"time"
 )
 
 const auditFile = ".gitstuff.audit"
 
 func Write(msg string) error {
+	timestamp := time.Now().Format("2006-01-02 15:04:05")
+
 	home, err := os.UserHomeDir()
 	if err != nil {
 		return nil
@@ -33,7 +36,8 @@ func Write(msg string) error {
 	defer f.Close()
 
 	// write the audit message
-	if _, err := f.WriteString(msg + "\n"); err != nil {
+
+	if _, err := f.WriteString(timestamp + ": " + msg + "\n"); err != nil {
 		return fmt.Errorf("failed to write to file: %w", err)
 	}
 	return nil

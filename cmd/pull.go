@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/de1ux/gitstuff/audit"
 	"github.com/de1ux/gitstuff/git"
 	"github.com/de1ux/gitstuff/shell"
 	"github.com/spf13/cobra"
@@ -23,6 +24,12 @@ var PullCmd = &cobra.Command{
 				return err
 			}
 		}
+
+		err = audit.Write(branch + ": " + "pulling changes from origin")
+		if err != nil {
+			return err
+		}
+
 		return shell.Spinner("> git pull origin "+branch, func() error {
 			return git.Pull(branch)
 		})
