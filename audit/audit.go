@@ -37,13 +37,13 @@ func Write(branch, msg string) error {
 	}
 	defer f.Close()
 
-	repo, err := git.CurrentRepo()
+	repo, org, err := git.CurrentOrgAndRepo()
 	if err != nil {
 		return err
 	}
 
 	// write the audit message
-	wrapped := fmt.Sprintf("%s -- repo %s, branch %s: %s\n", timestamp, repo, branch, msg)
+	wrapped := fmt.Sprintf("%s -- repo %s/%s, branch %s: %s\n", timestamp, org, repo, branch, msg)
 	if _, err := f.WriteString(wrapped); err != nil {
 		return fmt.Errorf("failed to write to file: %w", err)
 	}
