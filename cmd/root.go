@@ -1,12 +1,28 @@
 package cmd
 
 import (
+	"github.com/de1ux/gitstuff/git"
 	"github.com/spf13/cobra"
 )
 
 var branchPrefix = ""
+var branch = ""
+var repo = ""
+var org = ""
 
 func init() {
+	var err error
+	branch, err = git.CurrentBranch()
+	if err != nil {
+		println("Failed to get current branch, are you in a git repo?")
+		panic(err)
+	}
+	org, repo, err = git.CurrentOrgAndRepo()
+	if err != nil {
+		println("Failed to get current repo, are you in a git repo?")
+		panic(err)
+	}
+
 	RootCmd.Flags().StringVar(&branchPrefix, "branch-prefix", "ne", "the prefix for new branches")
 
 	RootCmd.AddCommand(InitCmd)

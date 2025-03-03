@@ -57,11 +57,7 @@ var InitCmd = &cobra.Command{
 					}
 				}
 			} else {
-				current, err := git.CurrentBranch()
-				if err != nil {
-					return err
-				}
-				log.Println("Branching off of " + current + " instead of " + branchDefault)
+				log.Println("Branching off of " + branch + " instead of " + branchDefault)
 			}
 		}
 
@@ -85,7 +81,7 @@ var InitCmd = &cobra.Command{
 
 		log.Println("All set, gl hf")
 
-		return audit.Write("created new branch " + branch)
+		return audit.Write(branch, "created new branch")
 
 	},
 }

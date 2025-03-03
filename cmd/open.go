@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"github.com/de1ux/gitstuff/audit"
-	"github.com/de1ux/gitstuff/git"
 	"github.com/de1ux/gitstuff/shell"
 	"github.com/spf13/cobra"
 )
@@ -42,10 +41,6 @@ var OpenCmd = &cobra.Command{
 	Args: cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		shell.BashStatusCode(script)
-		current, err := git.CurrentBranch()
-		if err != nil {
-			return err
-		}
-		return audit.Write(current + ": " + "opening pull request")
+		return audit.Write(branch, "opening pull request")
 	},
 }

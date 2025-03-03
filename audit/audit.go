@@ -5,11 +5,13 @@ import (
 	"os"
 	"path/filepath"
 	"time"
+
+	"github.com/de1ux/gitstuff/git"
 )
 
 const auditFile = ".gitstuff.audit"
 
-func Write(msg string) error {
+func Write(branch, msg string) error {
 	timestamp := time.Now().Format("2006-01-02 15:04:05")
 
 	home, err := os.UserHomeDir()
@@ -35,9 +37,14 @@ func Write(msg string) error {
 	}
 	defer f.Close()
 
-	// write the audit message
+	repo, err := git.CurrentRepo()
+	if err != nil {
+		return err
+	}
 
-	if _, err := f.WriteString(timestamp + ": " + msg + "\n"); err != nil {
+	// write the audit message
+	wrapped := fmt.Sprintf("%s -- repo %s, branch %s: %s\n", timestamp, repo, branch, msg)
+	if _, err := f.WriteString(wrapped); err != nil {
 		return fmt.Errorf("failed to write to file: %w", err)
 	}
 	return nil

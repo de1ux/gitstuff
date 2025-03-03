@@ -12,20 +12,11 @@ var PullCmd = &cobra.Command{
 	Args: cobra.ArbitraryArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		var err error
-		var branch string
 		if len(args) > 0 {
 			branch = args[1]
-		} else {
-			err = shell.Spinner("Getting current branch", func() error {
-				branch, err = git.CurrentBranch()
-				return err
-			})
-			if err != nil {
-				return err
-			}
 		}
 
-		err = audit.Write(branch + ": " + "pulling changes from origin")
+		err = audit.Write(branch, "pulling changes from origin")
 		if err != nil {
 			return err
 		}

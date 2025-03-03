@@ -22,7 +22,7 @@ var CheckoutCmd = &cobra.Command{
 		branch := args[0]
 
 		if newBranch {
-			err := audit.Write(branch + ": " + "creating new branch and checking out")
+			err := audit.Write(branch, "creating new branch and checking out")
 			if err != nil {
 				return err
 			}
@@ -32,7 +32,7 @@ var CheckoutCmd = &cobra.Command{
 			})
 		}
 
-		err := audit.Write(branch + ": " + "checking out branch")
+		err := audit.Write(branch, "checking out branch")
 		if err != nil {
 			return err
 		}

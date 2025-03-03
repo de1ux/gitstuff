@@ -13,14 +13,9 @@ import (
 	"golang.org/x/oauth2"
 )
 
-var (
-	repo         string
-	organization string
-)
-
 func init() {
 	SubmitCmd.Flags().StringVar(&repo, "repo", "", "Github repo to submit the PR to")
-	SubmitCmd.Flags().StringVar(&organization, "org", "", "Github organization to submit the PR to")
+	SubmitCmd.Flags().StringVar(&org, "org", "", "Github organization to submit the PR to")
 }
 
 const NewPrTemplate = `
@@ -57,21 +52,18 @@ var SubmitCmd = &cobra.Command{
 			),
 		)
 
-		current, err := git.CurrentBranch()
-		if err != nil {
-			return err
-		}
-		ticket := git.TicketNumber(branchPrefix, current)
+		ticket := git.TicketNumber(branchPrefix, branch)
 		if strings.TrimSpace(ticket) == "" {
 			ticket = "Todo"
 		}
 
 		var pr *github.PullRequest
+		var err error
 		err = shell.Spinner("Creating draft PR on Github", func() error {
-			pr, _, err = c.PullRequests.Create(cmd.Context(), organization, repo, &github.NewPullRequest{
+			pr, _, err = c.PullRequests.Create(cmd.Context(), org, repo, &github.NewPullRequest{
 				Title: github.String(ticket),
 				Draft: github.Bool(true),
-				Head:  github.String(current),
+				Head:  github.String(branch),
 				Base:  github.String("main"),
 				Body:  github.String(NewPrTemplate),
 			})
@@ -90,6 +82,6 @@ var SubmitCmd = &cobra.Command{
 
 		shell.BashStatusCode("open " + pr.GetHTMLURL())
 
-		return audit.Write(current + ": created draft PR " + pr.GetHTMLURL())
+		return audit.Write(branch, "created draft PR "+pr.GetHTMLURL())
 	},
 }

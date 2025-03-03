@@ -156,3 +156,20 @@ func BranchExists(branch string) (bool, error) {
 	}
 	return true, nil
 }
+
+func CurrentOrgAndRepo() (string, string, error) {
+	out, err := shell.ExecOutput("git config --get remote.origin.url")
+	if err != nil {
+		return "", "", err
+	}
+	parts := strings.Split(out, "/")
+	if len(parts) < 2 {
+		return "", "", fmt.Errorf("failed to get repo name from url: %s", out)
+	}
+	orgName := parts[len(parts)-2]
+	orgName = strings.Replace(orgName, "\n", "", -1)
+
+	repoName := strings.TrimSuffix(parts[len(parts)-1], ".git")
+	repoName = strings.Replace(repoName, "\n", "", -1)
+	return orgName, repoName, nil
+}

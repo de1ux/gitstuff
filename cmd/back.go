@@ -23,7 +23,7 @@ var BackCmd = &cobra.Command{
 			return err
 		}
 
-		err = audit.Write(branch + ": " + "checking out branch")
+		err = audit.Write(branch, "checking out branch")
 		if err != nil {
 			return err
 		}

@@ -24,11 +24,6 @@ var CommitCmd = &cobra.Command{
 	Use:  "commit",
 	Args: cobra.ArbitraryArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		branch, err := git.CurrentBranch()
-		if err != nil {
-			return err
-		}
-
 		f := undoAndForce || force
 		msg := "> git push origin " + branch
 		if f {
@@ -36,11 +31,11 @@ var CommitCmd = &cobra.Command{
 		}
 
 		if git.InMergeConflict() {
-			err = audit.Write(branch + ": " + "resolving merge conflict automatically")
+			err := audit.Write(branch, "resolving merge conflict automatically")
 			if err != nil {
 				return err
 			}
-			err := git.CommitNoEdit()
+			err = git.CommitNoEdit()
 			if err != nil {
 				return err
 			}
@@ -59,14 +54,14 @@ var CommitCmd = &cobra.Command{
 
 		if undoAndForce {
 			// TODO - add a spinner
-			err = git.ResetLastCommit()
+			err := git.ResetLastCommit()
 			if err != nil {
 				return err
 			}
 		}
 
 		msg = "> git commit -am '" + commitMsg + "'"
-		err = audit.Write(branch + ": " + msg)
+		err := audit.Write(branch, msg)
 		if err != nil {
 			return err
 		}

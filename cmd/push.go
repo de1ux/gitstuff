@@ -17,21 +17,13 @@ var PushCmd = &cobra.Command{
 	Use:  "push",
 	Args: cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		var branch string
 		var err error
-		err = shell.Spinner("Getting current branch", func() error {
-			branch, err = git.CurrentBranch()
-			return err
-		})
-		if err != nil {
-			return err
-		}
 		msg := "> git push origin " + branch
 		if forcePush {
 			msg = "> git push -f origin " + branch
 		}
 
-		err = audit.Write(branch + ": " + "pushing changes to origin")
+		err = audit.Write(branch, "pushing changes to origin")
 		if err != nil {
 			return err
 		}

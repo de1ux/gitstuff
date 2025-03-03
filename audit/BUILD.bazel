@@ -5,4 +5,5 @@ go_library(
     srcs = ["audit.go"],
     importpath = "github.com/de1ux/gitstuff/audit",
     visibility = ["//visibility:public"],
+    deps = ["//git"],
 )
