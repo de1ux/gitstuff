@@ -26,6 +26,16 @@ alias gcommit="gitstuff commit"
 alias gopen="gitstuff open"
 ```
 
+## Permission
+
+To use `gitstuff submit` command which opens a PR draft, add `GITHUB_TOKEN` to your envrionment variable. Token should have `repo` permission checked. 
+
+<img width="562" alt="Screenshot 2025-03-07 at 11 03 50 AM" src="https://github.com/user-attachments/assets/82cf3bed-247b-44af-83ab-133a0824a2e3" />
+
+If your org requires SSO, make sure to click "Configure SSO" to enable your token. 
+<img width="788" alt="Screenshot 2025-03-07 at 11 05 22 AM" src="https://github.com/user-attachments/assets/0228eb03-3982-4725-a078-8ff058999d68" />
+
+
 ## Commands
 
 ### `gcommit <message>`
