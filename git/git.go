@@ -168,6 +168,7 @@ func CurrentOrgAndRepo() (string, string, error) {
 	}
 	orgName := parts[len(parts)-2]
 	orgName = strings.Replace(orgName, "\n", "", -1)
+	orgName = strings.Replace(orgName, "git@github.com:", "", -1)
 
 	repoName := strings.TrimSuffix(parts[len(parts)-1], ".git")
 	repoName = strings.Replace(repoName, "\n", "", -1)

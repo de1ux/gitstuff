@@ -14,8 +14,8 @@ import (
 )
 
 func init() {
-	SubmitCmd.Flags().StringVar(&repo, "repo", "", "Github repo to submit the PR to")
-	SubmitCmd.Flags().StringVar(&org, "org", "", "Github organization to submit the PR to")
+	SubmitCmd.Flags().StringVar(&repo, "repo", repo, "Github repo to submit the PR to")
+	SubmitCmd.Flags().StringVar(&org, "org", org, "Github organization to submit the PR to")
 }
 
 const NewPrTemplate = `
