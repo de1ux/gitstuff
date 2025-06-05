@@ -11,6 +11,10 @@ cp $(bazel cquery //:gitstuff --output files) /usr/local/bin/gitstuff
 
 # if that doesn't work, copy directly out of the bazel-out directory
 # cp bazel-out/darwin_arm64-fastbuild/bin/gitstuff_/gitstuff <wherever>
+
+# Update depencies, if go.mod changes at all
+bazel mod tidy
+bazel run //:gazelle -- update-repos -from_file=go.mod -to_macro=deps.bzl%go_dependencies
 ```
 
 I also add these aliases to make it easier to reach the binary:
