@@ -24,7 +24,7 @@ jobs:
           sudo chmod +x /usr/local/bin/bazelisk
 
       - name: Build for Linux
-        run: bazelisk build //cmd/gitstuff:gitstuff
+        run: bazelisk build //:gitstuff
         env:
           GOOS: linux
           GOARCH: amd64
