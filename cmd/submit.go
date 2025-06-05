@@ -1,16 +1,14 @@
 package cmd
 
 import (
-	"context"
+	"fmt"
 	"os"
 	"strings"
 
 	"github.com/de1ux/gitstuff/audit"
 	"github.com/de1ux/gitstuff/git"
 	"github.com/de1ux/gitstuff/shell"
-	"github.com/google/go-github/v50/github"
 	"github.com/spf13/cobra"
-	"golang.org/x/oauth2"
 )
 
 func init() {
@@ -43,45 +41,64 @@ const NewPrTemplate = `
 var SubmitCmd = &cobra.Command{
 	Use: "submit",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		c := github.NewClient(
-			oauth2.NewClient(
-				context.Background(),
-				oauth2.StaticTokenSource(
-					&oauth2.Token{AccessToken: os.Getenv("GITHUB_TOKEN")},
-				),
-			),
-		)
+		// Check if gh CLI is installed
+		if err := shell.ExecOutputVerbose("gh --version"); err != nil {
+			return fmt.Errorf("gh CLI is not installed. Please install it from https://cli.github.com/")
+		}
 
 		ticket := git.TicketNumber(branchPrefix, branch)
 		if strings.TrimSpace(ticket) == "" {
 			ticket = "Todo"
 		}
 
-		var pr *github.PullRequest
-		var err error
+		// Create a temporary file for the PR template
+		tmpFile, err := os.CreateTemp("", "pr-template-*.md")
+		if err != nil {
+			return fmt.Errorf("failed to create temporary file: %w", err)
+		}
+		defer os.Remove(tmpFile.Name())
+
+		if _, err := tmpFile.WriteString(NewPrTemplate); err != nil {
+			return fmt.Errorf("failed to write template to temporary file: %w", err)
+		}
+		if err := tmpFile.Close(); err != nil {
+			return fmt.Errorf("failed to close temporary file: %w", err)
+		}
+
+		var prURL string
 		err = shell.Spinner("Creating draft PR on Github", func() error {
-			pr, _, err = c.PullRequests.Create(cmd.Context(), org, repo, &github.NewPullRequest{
-				Title: github.String(ticket),
-				Draft: github.Bool(true),
-				Head:  github.String(branch),
-				Base:  github.String("main"),
-				Body:  github.String(NewPrTemplate),
-			})
-			if err != nil {
-				return err
+			// Construct the gh pr create command with all options
+			ghCmd := fmt.Sprintf(
+				"gh pr create --draft --title %s --head %s --base main --body-file %s",
+				ticket,
+				branch,
+				tmpFile.Name(),
+			)
+
+			// If org and repo are specified, add them to the command
+			if org != "" && repo != "" {
+				ghCmd += fmt.Sprintf(" --repo %s/%s", org, repo)
 			}
+
+			// Execute the command and capture the output (PR URL)
+			output, err := shell.ExecOutput(ghCmd)
+			if err != nil {
+				return fmt.Errorf("failed to create PR: %w", err)
+			}
+			prURL = strings.TrimSpace(output)
 			return nil
 		})
 		if err != nil {
 			return err
 		}
+
 		println()
 		println("=========================================")
-		println(pr.GetHTMLURL())
+		println(prURL)
 		println("=========================================")
 
-		shell.BashStatusCode("open " + pr.GetHTMLURL())
+		shell.BashStatusCode("open " + prURL)
 
-		return audit.Write(branch, "created draft PR "+pr.GetHTMLURL())
+		return audit.Write(branch, "created draft PR "+prURL)
 	},
 }
