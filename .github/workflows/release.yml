@@ -18,12 +18,14 @@ jobs:
         with:
           go-version: '1.22'
 
-      - name: Set up Bazel
-        uses: bazelbuild/setup-bazelisk@v2
+      - name: Install Bazelisk
+        run: |
+          sudo wget -O /usr/local/bin/bazelisk https://github.com/bazelbuild/bazelisk/releases/download/v1.19.0/bazelisk-linux-amd64
+          sudo chmod +x /usr/local/bin/bazelisk
 
       - name: Build for Linux AMD64
         run: |
-          bazel build //:gitstuff
+          bazelisk build //:gitstuff
           cp bazel-bin/gitstuff_/gitstuff gitstuff-linux-amd64
         env:
           GOOS: linux
@@ -31,7 +33,7 @@ jobs:
 
       - name: Build for Linux ARM64
         run: |
-          bazel build //:gitstuff
+          bazelisk build //:gitstuff
           cp bazel-bin/gitstuff_/gitstuff gitstuff-linux-arm64
         env:
           GOOS: linux
@@ -39,7 +41,7 @@ jobs:
 
       - name: Build for macOS AMD64
         run: |
-          bazel build //:gitstuff
+          bazelisk build //:gitstuff
           cp bazel-bin/gitstuff_/gitstuff gitstuff-darwin-amd64
         env:
           GOOS: darwin
@@ -47,7 +49,7 @@ jobs:
 
       - name: Build for macOS ARM64
         run: |
-          bazel build //:gitstuff
+          bazelisk build //:gitstuff
           cp bazel-bin/gitstuff_/gitstuff gitstuff-darwin-arm64
         env:
           GOOS: darwin
