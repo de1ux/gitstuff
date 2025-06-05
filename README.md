@@ -26,15 +26,22 @@ alias gcommit="gitstuff commit"
 alias gopen="gitstuff open"
 ```
 
-## Permission
+## Prerequisites
 
-To use `gitstuff submit` command which opens a PR draft, add `GITHUB_TOKEN` to your envrionment variable. Token should have `repo` permission checked. 
+### GitHub CLI
 
-<img width="562" alt="Screenshot 2025-03-07 at 11 03 50 AM" src="https://github.com/user-attachments/assets/82cf3bed-247b-44af-83ab-133a0824a2e3" />
+The `gitstuff submit` command requires GitHub CLI (`gh`) to be installed and authenticated. To set this up:
 
-If your org requires SSO, make sure to click "Configure SSO" to enable your token. 
-<img width="788" alt="Screenshot 2025-03-07 at 11 05 22 AM" src="https://github.com/user-attachments/assets/0228eb03-3982-4725-a078-8ff058999d68" />
+1. Install GitHub CLI:
+   - macOS: `brew install gh`
+   - Windows: `winget install GitHub.cli`
+   - Linux: See [GitHub CLI installation guide](https://github.com/cli/cli#installation)
 
+2. Authenticate with GitHub:
+   ```bash
+   gh auth login
+   ```
+   Follow the prompts to complete authentication. If your organization requires SSO, the GitHub CLI will automatically handle the SSO flow.
 
 ## Commands
 
