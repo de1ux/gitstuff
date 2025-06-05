@@ -18,29 +18,31 @@ jobs:
         with:
           go-version: '1.22'
 
-      - name: Install Bazelisk
+      - name: Build for Linux AMD64
         run: |
-          sudo wget -O /usr/local/bin/bazelisk https://github.com/bazelbuild/bazelisk/releases/download/v1.19.0/bazelisk-linux-amd64
-          sudo chmod +x /usr/local/bin/bazelisk
+          GOOS=linux GOARCH=amd64 go build -o gitstuff-linux-amd64 ./cmd/gitstuff
 
-      - name: Build for Linux
-        run: bazelisk build //:gitstuff
-        env:
-          GOOS: linux
-          GOARCH: amd64
+      - name: Build for Linux ARM64
+        run: |
+          GOOS=linux GOARCH=arm64 go build -o gitstuff-linux-arm64 ./cmd/gitstuff
 
-      - name: Build for macOS
-        run: bazelisk build //:gitstuff
-        env:
-          GOOS: darwin
-          GOARCH: amd64
+      - name: Build for macOS AMD64
+        run: |
+          GOOS=darwin GOARCH=amd64 go build -o gitstuff-darwin-amd64 ./cmd/gitstuff
+
+      - name: Build for macOS ARM64
+        run: |
+          GOOS=darwin GOARCH=arm64 go build -o gitstuff-darwin-arm64 ./cmd/gitstuff
 
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            bazel-bin/gitstuff_/gitstuff
+            gitstuff-linux-amd64
+            gitstuff-linux-arm64
+            gitstuff-darwin-amd64
+            gitstuff-darwin-arm64
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
