@@ -25,35 +25,23 @@ jobs:
 
       - name: Build for Linux AMD64
         run: |
-          bazelisk build //:gitstuff
+          bazelisk build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64 //:gitstuff
           cp bazel-bin/gitstuff_/gitstuff gitstuff-linux-amd64
-        env:
-          GOOS: linux
-          GOARCH: amd64
 
       - name: Build for Linux ARM64
         run: |
-          bazelisk build //:gitstuff
+          bazelisk build --platforms=@io_bazel_rules_go//go/toolchain:linux_arm64 //:gitstuff
           cp bazel-bin/gitstuff_/gitstuff gitstuff-linux-arm64
-        env:
-          GOOS: linux
-          GOARCH: arm64
 
       - name: Build for macOS AMD64
         run: |
-          bazelisk build //:gitstuff
+          bazelisk build --platforms=@io_bazel_rules_go//go/toolchain:darwin_amd64 //:gitstuff
           cp bazel-bin/gitstuff_/gitstuff gitstuff-darwin-amd64
-        env:
-          GOOS: darwin
-          GOARCH: amd64
 
       - name: Build for macOS ARM64
         run: |
-          bazelisk build //:gitstuff
+          bazelisk build --platforms=@io_bazel_rules_go//go/toolchain:darwin_arm64 //:gitstuff
           cp bazel-bin/gitstuff_/gitstuff gitstuff-darwin-arm64
-        env:
-          GOOS: darwin
-          GOARCH: arm64
 
       - name: Create Release
         id: create_release

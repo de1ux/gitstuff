@@ -2,6 +2,15 @@
 
 ## Install
 
+### Quick Install (Latest Release)
+```bash
+# For Apple Silicon (M1/M2/M3)
+curl -L https://github.com/de1ux/gitstuff/releases/latest/download/gitstuff-darwin-arm64 -o gitstuff && chmod +x gitstuff && sudo mv gitstuff /usr/local/bin/
+
+# For Intel Mac
+curl -L https://github.com/de1ux/gitstuff/releases/latest/download/gitstuff-darwin-amd64 -o gitstuff && chmod +x gitstuff && sudo mv gitstuff /usr/local/bin/
+```
+
 **Note: requires Bazel 8 or later to build**
 ```bash
 bazel build //:gitstuff
