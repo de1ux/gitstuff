@@ -18,6 +18,7 @@ var (
 func init() {
 	InitCmd.Flags().StringVar(&branchDefault, "default-branch", "main", "the base for new branches")
 	InitCmd.Flags().BoolVar(&skipPull, "skip-pull", false, "skip pulling the default-branch on new branches")
+	InitCmd.Flags().BoolVar(&force, "force", false, "skip untracked files, branch, and default branch checks")
 }
 
 var InitCmd = &cobra.Command{
@@ -29,20 +30,26 @@ var InitCmd = &cobra.Command{
 		// TODO - what if branch prefix is "" ?
 		branch := branchPrefix + "/" + ticket
 
-		untracked, err := git.UntrackedFiles()
-		if err != nil {
-			return err
+		if !force {
+			untracked, err := git.UntrackedFiles()
+			if err != nil {
+				return err
+			}
+			if untracked {
+				shell.PromptExit("There are untracked files in this repo. Continue?")
+			}
 		}
-		if untracked {
-			shell.PromptExit("There are untracked files in this repo. Continue?")
-		}
+
 
 		isDefault, err := git.IsBranch(branchDefault)
 		if err != nil {
 			return err
 		}
 		if !isDefault {
-			yes := shell.PromptYes(fmt.Sprintf("You are not on %s branch. Check it out?", branchDefault))
+			yes := true
+			if !force {
+				yes = shell.PromptYes(fmt.Sprintf("You are not on %s branch. Check it out?", branchDefault))
+			}
 			if yes {
 				// switch to default branch
 				err = git.Checkout(branchDefault)
@@ -61,16 +68,18 @@ var InitCmd = &cobra.Command{
 			}
 		}
 
-		branchExists, err := git.BranchExists(branch)
-		if branchExists {
-			shell.PromptExit("Branch " + branch + " exists, erase and reinit?")
-			err = git.Checkout(branchDefault)
-			if err != nil {
-				return err
-			}
-			err = git.DeleteBranch(branch)
-			if err != nil {
-				return err
+		if !force {
+			branchExists, err := git.BranchExists(branch)
+			if branchExists {
+				shell.PromptExit("Branch " + branch + " exists, erase and reinit?")
+				err = git.Checkout(branchDefault)
+				if err != nil {
+					return err
+				}
+				err = git.DeleteBranch(branch)
+				if err != nil {
+					return err
+				}
 			}
 		}
 

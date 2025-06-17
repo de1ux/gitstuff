@@ -9,6 +9,7 @@ var branchPrefix = ""
 var branch = ""
 var repo = ""
 var org = ""
+var force = false
 
 func init() {
 	var err error

@@ -12,7 +12,6 @@ import (
 
 var (
 	undoAndForce = false
-	force        = false
 )
 
 func init() {
