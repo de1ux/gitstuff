@@ -157,6 +157,16 @@ func BranchExists(branch string) (bool, error) {
 	return true, nil
 }
 
+func FetchAll() error {
+	err := shell.ExecOutputVerbose("git fetch --all --prune")
+	return err
+}
+
+func FetchBranch(branch string) error {
+	err := shell.ExecOutputVerbose("git fetch origin " + branch + ":" + branch)
+	return err
+}
+
 func CurrentOrgAndRepo() (string, string, error) {
 	out, err := shell.ExecOutput("git config --get remote.origin.url")
 	if err != nil {

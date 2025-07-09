@@ -31,6 +31,7 @@ func init() {
 	RootCmd.AddCommand(SubmitCmd)
 	RootCmd.AddCommand(PullCmd)
 	RootCmd.AddCommand(PushCmd)
+	RootCmd.AddCommand(FetchCmd)
 	RootCmd.AddCommand(CheckoutCmd)
 	RootCmd.AddCommand(BackCmd)
 	RootCmd.AddCommand(ForwardCmd)
