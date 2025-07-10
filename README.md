@@ -37,6 +37,7 @@ alias gsubmit="gitstuff submit"
 alias ginit="gitstuff init"
 alias gcommit="gitstuff commit"
 alias gopen="gitstuff open"
+alias gfetch="gitstuff fetch"
 ```
 
 ## Prerequisites
@@ -76,11 +77,17 @@ Pushes the latest changes to the remote repository.
 
 Same as `git push origin <current branch name>`
 
+### `gfetch [branch name]`
+
+Fetches changes from the remote repository. If a branch name is provided, fetches only that branch. If no branch name is provided, fetches all branches from all remotes.
+
+Same as `git fetch origin <branch name>:<branch name>` or `git fetch --all --prune`
+
 ## `gco <branch name>`
 
-Checkout a branch. Passing `-b` will create a new branch.
+Checkout a branch. Passing `-b` will create a new branch. Passing `-u` will fetch the branch from origin before checking it out.
 
-Same as `git checkout <branch name>` or `git checkout -b <branch name>`
+Same as `git checkout <branch name>`, `git checkout -b <branch name>`, or `git fetch origin <branch name>:<branch name> && git checkout <branch name>` (with `-u`)
 
 ### `gback` / `gforward`
 

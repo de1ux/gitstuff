@@ -10,9 +10,11 @@ import (
 )
 
 var newBranch bool
+var fetchBranch bool
 
 func init() {
 	CheckoutCmd.Flags().BoolVarP(&newBranch, "new", "b", false, "make a new branch and checkout to it")
+	CheckoutCmd.Flags().BoolVarP(&fetchBranch, "fetch", "u", false, "fetch the branch before checking it out")
 }
 
 var CheckoutCmd = &cobra.Command{
@@ -29,6 +31,21 @@ var CheckoutCmd = &cobra.Command{
 
 			return shell.Spinner("> git checkout -b "+branch, func() error {
 				return git.CheckoutNew(branch)
+			})
+		}
+
+		if fetchBranch {
+			err := audit.Write(branch, "fetching and checking out branch")
+			if err != nil {
+				return err
+			}
+
+			return shell.Spinner("> git fetch origin "+branch+":"+branch+" && git checkout "+branch, func() error {
+				err := git.FetchBranch(branch)
+				if err != nil {
+					return err
+				}
+				return git.Checkout(branch)
 			})
 		}
 

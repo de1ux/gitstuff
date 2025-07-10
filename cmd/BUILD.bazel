@@ -6,6 +6,7 @@ go_library(
         "back.go",
         "checkout.go",
         "commit.go",
+        "fetch.go",
         "forward.go",
         "init.go",
         "open.go",
