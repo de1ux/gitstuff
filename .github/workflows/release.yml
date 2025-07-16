@@ -2,8 +2,8 @@ name: Release
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - main
 
 jobs:
   build:
@@ -47,11 +47,14 @@ jobs:
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
+          tag_name: latest
+          name: Latest Release
           files: |
             gitstuff-linux-amd64
             gitstuff-linux-arm64
             gitstuff-darwin-amd64
             gitstuff-darwin-arm64
           generate_release_notes: true
+          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 

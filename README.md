@@ -9,6 +9,12 @@ curl -L https://github.com/de1ux/gitstuff/releases/latest/download/gitstuff-darw
 
 # For Intel Mac
 curl -L https://github.com/de1ux/gitstuff/releases/latest/download/gitstuff-darwin-amd64 -o gitstuff && chmod +x gitstuff && sudo mv gitstuff /usr/local/bin/
+
+# For Linux ARM64
+curl -L https://github.com/de1ux/gitstuff/releases/latest/download/gitstuff-linux-arm64 -o gitstuff && chmod +x gitstuff && sudo mv gitstuff /usr/local/bin/
+
+# For Linux AMD64
+curl -L https://github.com/de1ux/gitstuff/releases/latest/download/gitstuff-linux-amd64 -o gitstuff && chmod +x gitstuff && sudo mv gitstuff /usr/local/bin/
 ```
 
 **Note: requires Bazel 8 or later to build**
