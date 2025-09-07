@@ -156,3 +156,39 @@ func BranchExists(branch string) (bool, error) {
 	}
 	return true, nil
 }
+
+func GetRemoteOwnerRepo() (string, string, error) {
+	out, err := shell.ExecOutput("git remote get-url origin")
+	if err != nil {
+		return "", "", err
+	}
+	
+	remoteURL := strings.TrimSpace(out)
+	
+	// Handle SSH URLs (git@github.com:owner/repo.git)
+	if strings.HasPrefix(remoteURL, "git@") {
+		parts := strings.Split(remoteURL, ":")
+		if len(parts) != 2 {
+			return "", "", fmt.Errorf("invalid SSH remote URL format: %s", remoteURL)
+		}
+		repoPath := strings.TrimSuffix(parts[1], ".git")
+		pathParts := strings.Split(repoPath, "/")
+		if len(pathParts) != 2 {
+			return "", "", fmt.Errorf("invalid repository path format: %s", repoPath)
+		}
+		return pathParts[0], pathParts[1], nil
+	}
+	
+	// Handle HTTPS URLs (https://github.com/owner/repo.git)
+	if strings.HasPrefix(remoteURL, "https://") {
+		remoteURL = strings.TrimPrefix(remoteURL, "https://github.com/")
+		remoteURL = strings.TrimSuffix(remoteURL, ".git")
+		pathParts := strings.Split(remoteURL, "/")
+		if len(pathParts) != 2 {
+			return "", "", fmt.Errorf("invalid HTTPS repository path format: %s", remoteURL)
+		}
+		return pathParts[0], pathParts[1], nil
+	}
+	
+	return "", "", fmt.Errorf("unsupported remote URL format: %s", remoteURL)
+}

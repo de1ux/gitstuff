@@ -56,9 +56,14 @@ var SubmitCmd = &cobra.Command{
 			ticket = "Todo"
 		}
 
+		owner, repo, err := git.GetRemoteOwnerRepo()
+		if err != nil {
+			return err
+		}
+
 		var pr *github.PullRequest
 		err = shell.Spinner("Creating draft PR on Github", func() error {
-			pr, _, err = c.PullRequests.Create(cmd.Context(), "DataDog", "dd-source", &github.NewPullRequest{
+			pr, _, err = c.PullRequests.Create(cmd.Context(), owner, repo, &github.NewPullRequest{
 				Title: github.String(ticket),
 				Draft: github.Bool(true),
 				Head:  github.String(current),
