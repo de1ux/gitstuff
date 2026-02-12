@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/de1ux/gitstuff/config"
 	"github.com/de1ux/gitstuff/git"
 	"github.com/spf13/cobra"
 )
@@ -12,7 +13,12 @@ var org = ""
 var force = false
 
 func init() {
-	var err error
+	// Initialize config file
+	_, err := config.Load()
+	if err != nil {
+		println("Warning: Failed to load config file:", err.Error())
+	}
+
 	branch, err = git.CurrentBranch()
 	if err != nil {
 		println("Failed to get current branch, are you in a git repo?")

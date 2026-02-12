@@ -5,6 +5,7 @@ import (
 	"log"
 	"strings"
 
+	"github.com/de1ux/gitstuff/config"
 	"github.com/de1ux/gitstuff/shell"
 	"github.com/de1ux/gitstuff/stack"
 )
@@ -83,7 +84,14 @@ func DeleteBranch(branch string) error {
 }
 
 func Checkout(branch string) error {
-	_, err := shell.ExecOutput("git checkout " + branch)
+	cmd := "git checkout"
+	cfg := config.Get()
+	if cfg.AlwaysIgnoreWorktrees {
+		cmd += " --ignore-other-worktrees"
+	}
+	cmd += " " + branch
+
+	_, err := shell.ExecOutput(cmd)
 	if err != nil {
 		return err
 	}
@@ -98,7 +106,14 @@ func Checkout(branch string) error {
 }
 
 func CheckoutNew(branch string) error {
-	_, err := shell.ExecOutput("git checkout -b " + branch)
+	cmd := "git checkout -b"
+	cfg := config.Get()
+	if cfg.AlwaysIgnoreWorktrees {
+		cmd += " --ignore-other-worktrees"
+	}
+	cmd += " " + branch
+
+	_, err := shell.ExecOutput(cmd)
 	if err != nil {
 		return err
 	}

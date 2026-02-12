@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/de1ux/gitstuff/audit"
+	"github.com/de1ux/gitstuff/config"
 	"github.com/de1ux/gitstuff/git"
 	"github.com/de1ux/gitstuff/shell"
 	"github.com/spf13/cobra"
@@ -22,6 +23,11 @@ var CheckoutCmd = &cobra.Command{
 	Args: cobra.ArbitraryArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		branch := args[0]
+		cfg := config.Get()
+		ignoreWorktreesFlag := ""
+		if cfg.AlwaysIgnoreWorktrees {
+			ignoreWorktreesFlag = " --ignore-other-worktrees"
+		}
 
 		if newBranch {
 			err := audit.Write(branch, "creating new branch and checking out")
@@ -29,7 +35,7 @@ var CheckoutCmd = &cobra.Command{
 				return err
 			}
 
-			return shell.Spinner("> git checkout -b "+branch, func() error {
+			return shell.Spinner("> git checkout -b"+ignoreWorktreesFlag+" "+branch, func() error {
 				return git.CheckoutNew(branch)
 			})
 		}
@@ -40,7 +46,7 @@ var CheckoutCmd = &cobra.Command{
 				return err
 			}
 
-			return shell.Spinner("> git fetch origin "+branch+":"+branch+" && git checkout "+branch, func() error {
+			return shell.Spinner("> git fetch origin "+branch+":"+branch+" && git checkout"+ignoreWorktreesFlag+" "+branch, func() error {
 				err := git.FetchBranch(branch)
 				if err != nil {
 					return err
@@ -55,7 +61,7 @@ var CheckoutCmd = &cobra.Command{
 		}
 
 		if len(args) == 1 {
-			return shell.Spinner("> git checkout "+branch, func() error {
+			return shell.Spinner("> git checkout"+ignoreWorktreesFlag+" "+branch, func() error {
 				return git.Checkout(branch)
 			})
 		}

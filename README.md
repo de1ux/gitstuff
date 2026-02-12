@@ -63,6 +63,21 @@ The `gitstuff submit` command requires GitHub CLI (`gh`) to be installed and aut
    ```
    Follow the prompts to complete authentication. If your organization requires SSO, the GitHub CLI will automatically handle the SSO flow.
 
+## Configuration
+
+gitstuff uses a configuration file located at `~/.config/gitstuff.config`. This file is automatically created on first run with default values.
+
+### Available Options
+
+- `alwaysIgnoreWorktrees` (boolean, default: `false`): When set to `true`, automatically adds the `--ignore-other-worktrees` flag to all git checkout commands. This is useful when working with git worktrees and you want to checkout branches that are already checked out in other worktrees.
+
+Example configuration:
+```json
+{
+  "alwaysIgnoreWorktrees": true
+}
+```
+
 ## Commands
 
 ### `gcommit <message>`
