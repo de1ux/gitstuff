@@ -1,0 +1,3 @@
+# Workaround for Bazel 9.0.0 + macOS Xcode config issue
+build --features=-cgo
+build --action_env=BAZEL_USE_CPP_ONLY_TOOLCHAIN=1

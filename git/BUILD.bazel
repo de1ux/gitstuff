@@ -6,6 +6,7 @@ go_library(
     importpath = "github.com/de1ux/gitstuff/git",
     visibility = ["//visibility:public"],
     deps = [
+        "//config",
         "//shell",
         "//stack",
     ],
