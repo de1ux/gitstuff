@@ -9,11 +9,11 @@ import (
 var script = `
 branch=$(git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
 
-# Try to get existing PR URL using gh CLI
+# Try to get existing PR URL for this specific branch using gh CLI
 if command -v gh &> /dev/null; then
-  pr_url=$(gh pr view --json url -q .url 2>/dev/null)
+  pr_url=$(gh pr list --head "$branch" --json url --jq '.[0].url' 2>/dev/null)
 
-  # If PR exists, open it and exit
+  # If PR exists for this branch, open it and exit
   if [[ -n $pr_url ]]; then
     open $pr_url
     exit 0

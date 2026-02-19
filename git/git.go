@@ -106,12 +106,7 @@ func Checkout(branch string) error {
 }
 
 func CheckoutNew(branch string) error {
-	cmd := "git checkout -b"
-	cfg := config.Get()
-	if cfg.AlwaysIgnoreWorktrees {
-		cmd += " --ignore-other-worktrees"
-	}
-	cmd += " " + branch
+	cmd := "git checkout -b " + branch
 
 	_, err := shell.ExecOutput(cmd)
 	if err != nil {

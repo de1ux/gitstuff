@@ -25,7 +25,7 @@ var CheckoutCmd = &cobra.Command{
 		branch := args[0]
 		cfg := config.Get()
 		ignoreWorktreesFlag := ""
-		if cfg.AlwaysIgnoreWorktrees {
+		if cfg.AlwaysIgnoreWorktrees && !newBranch {
 			ignoreWorktreesFlag = " --ignore-other-worktrees"
 		}
 

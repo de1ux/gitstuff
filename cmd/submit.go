@@ -39,8 +39,38 @@ const NewPrTemplate = `
 `
 
 var SubmitCmd = &cobra.Command{
-	Use: "submit",
+	Use:  "submit",
+	Args: cobra.MaximumNArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
+		// If a commit message is provided, commit and push first
+		if len(args) == 1 {
+			commitMsg := args[0]
+			if strings.HasPrefix(branch, branchPrefix) {
+				ticketNumber := git.TicketNumber(branchPrefix, branch)
+				commitMsg = ticketNumber + " " + commitMsg
+			}
+
+			msg := "> git commit -am '" + commitMsg + "'"
+			err := audit.Write(branch, msg)
+			if err != nil {
+				return err
+			}
+
+			err = shell.Spinner(msg, func() error {
+				return git.Commit(commitMsg)
+			})
+			if err != nil {
+				return err
+			}
+
+			err = shell.Spinner("> git push origin "+branch, func() error {
+				return git.Push(branch, false)
+			})
+			if err != nil {
+				return err
+			}
+		}
+
 		// Check if gh CLI is installed
 		if err := shell.ExecOutputVerbose("gh --version"); err != nil {
 			return fmt.Errorf("gh CLI is not installed. Please install it from https://cli.github.com/")
