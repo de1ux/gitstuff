@@ -10,6 +10,5 @@ go_library(
     visibility = ["//visibility:public"],
     deps = [
         "@com_github_erikgeiser_promptkit//confirmation",
-        "@com_github_pterm_pterm//:pterm",
     ],
 )

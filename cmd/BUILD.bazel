@@ -23,7 +23,6 @@ go_library(
         "//git",
         "//shell",
         "//stack",
-        "@com_github_pterm_pterm//:pterm",
         "@com_github_spf13_cobra//:cobra",
     ],
 )
