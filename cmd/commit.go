@@ -6,7 +6,6 @@ import (
 	"github.com/de1ux/gitstuff/audit"
 	"github.com/de1ux/gitstuff/git"
 	"github.com/de1ux/gitstuff/shell"
-	_ "github.com/pterm/pterm"
 	"github.com/spf13/cobra"
 )
 

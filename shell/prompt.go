@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/erikgeiser/promptkit/confirmation"
-	"github.com/pterm/pterm"
 )
 
 func PromptExit(msg string) {
@@ -27,13 +26,6 @@ func PromptYes(msg string) bool {
 }
 
 func Spinner(msg string, f func() error) error {
-	spinner, err := pterm.DefaultSpinner.WithShowTimer(false).Start(msg)
-	if err != nil {
-		return err
-	}
-	err = f()
-	if err != nil {
-		return err
-	}
-	return spinner.Stop()
+	fmt.Println(msg)
+	return f()
 }
